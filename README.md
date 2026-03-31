@@ -1,8 +1,14 @@
-# feedtrail
+<p align="center">
+  <img src="banner-header.png" alt="feedtrail banner" width="100%">
+</p>
+
+# FeedTrail
 
 Feed Tracking and Retrieval Abstraction Interface Layer.
 
 `feedtrail` provides a resilient RSS/Atom parser focused on production-style feeds where XML can be noisy, partially malformed, or inconsistent across publishers.
+
+Repository: https://github.com/juanmcristobal/feedtrail
 
 ## What It Does
 
@@ -15,22 +21,10 @@ Feed Tracking and Retrieval Abstraction Interface Layer.
 
 ## Installation
 
-### Runtime
-
-Requirements:
-- Python `>= 3.10`
-
-Install from source:
-
 ```bash
-pip install .
+pip install feedtrail
 ```
 
-### Development
-
-```bash
-pip install -r requirements_dev.txt
-```
 
 ## Quick Start
 
@@ -76,51 +70,13 @@ print(result["items"][0]["link"])
 - `request_hash`: SHA-256 hash of normalized parsed payload.
 - `error`: present when parsing fails (`items` will be empty in that case).
 
-## Development Workflow
 
-### Run tests
+## Support & Connect
 
-```bash
-make test
-```
+* ⭐ **Star the repo** if you found it useful
+* ☕ **Support me:** Say thanks by buying me a coffee! [https://buymeacoffee.com/juanmcristobal](https://buymeacoffee.com/juanmcristobal)
+* 💼 **Open to work:** [https://www.linkedin.com/in/jmcristobal/](https://www.linkedin.com/in/jmcristobal/)
 
-### Lint and formatting
-
-```bash
-make lint
-```
-
-### Coverage
-
-```bash
-make coverage
-```
-
-### Build Docker test image
-
-```bash
-make build-test-image
-```
-
-### Run tox environments in Docker
-
-```bash
-make test-all
-```
-
-## Project Structure
-
-```text
-feedtrail/
-  feed_parser.py          # Core RSS/Atom parser
-  utils/
-    date_utils.py         # Date parsing and normalization
-    xml_utils.py          # XML sanitation and extraction helpers
-tests/
-  test_feed_parser.py
-  test_utils_date_utils.py
-  test_utils_xml_utils.py
-```
 
 ## Author
 
