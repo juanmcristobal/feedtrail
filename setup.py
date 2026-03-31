@@ -39,6 +39,6 @@ setup(
         'Issues': 'https://github.com/juanmcristobal/feedtrail/issues',
     },
     url='https://github.com/juanmcristobal/feedtrail',
-    version='0.2.0',
+    version='0.3.0',
     zip_safe=False,
 )
