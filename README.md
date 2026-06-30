@@ -25,6 +25,19 @@ Repository: https://github.com/juanmcristobal/feedtrail
 pip install feedtrail
 ```
 
+## Command Line
+
+`feedtrail` reads XML from standard input and prints normalized JSON to standard output. The example below uses [`crawlsmith`](https://pypi.org/project/crawlsmith/) to fetch the feed content.
+
+```bash
+crawlsmith fetch https://example.com/feed.xml | jq -r ".content" | feedtrail
+```
+
+If you need relative URLs resolved, pass a base URL:
+
+```bash
+feedtrail --base-url https://example.com < feed.xml
+```
 
 ## Quick Start
 

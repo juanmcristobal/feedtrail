@@ -34,11 +34,16 @@ setup(
     keywords='feedtrail',
     name='feedtrail',
     packages=find_packages(include=['feedtrail', 'feedtrail.*']),
+    entry_points={
+        'console_scripts': [
+            'feedtrail=feedtrail.cli:main',
+        ],
+    },
     project_urls={
         'Repository': 'https://github.com/juanmcristobal/feedtrail',
         'Issues': 'https://github.com/juanmcristobal/feedtrail/issues',
     },
     url='https://github.com/juanmcristobal/feedtrail',
-    version='0.3.0',
+    version='0.3.1',
     zip_safe=False,
 )

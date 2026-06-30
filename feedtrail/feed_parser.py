@@ -458,6 +458,8 @@ class FeedParser:
 
     def parse(self, xml_content: str, base_url: str = ""):
         try:
+            if isinstance(xml_content, bytes):
+                xml_content = xml_content.decode("utf-8", errors="replace")
             xml_content = fix_escaped_cdata_markers(xml_content)
             content = sanitize_xml_entities(xml_content)
             valid = extract_valid_xml(content)

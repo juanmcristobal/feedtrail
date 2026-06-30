@@ -1,6 +1,9 @@
 import hashlib
+import io
+import json
 import xml.etree.ElementTree as ET
 
+from feedtrail.cli import main as cli_main
 from feedtrail.feed_parser import FeedParser
 
 RSS_WITH_NAMESPACES = """\
@@ -98,6 +101,17 @@ def test_parse_rss_end_to_end_and_sorting():
     assert second["pub_date"] is None
 
     assert len(parsed["request_hash"]) == 64
+
+
+def test_parse_accepts_bytes_content():
+    parser = FeedParser()
+    parsed = parser.parse(
+        RSS_WITH_NAMESPACES.encode("utf-8"), base_url="https://example.com"
+    )
+
+    assert parsed["headers"]["title"] == "My & Feed"
+    assert parsed["items"][0]["title"] == "First & Item"
+    assert "error" not in parsed
 
 
 def test_parse_atom_end_to_end_and_link_resolution():
@@ -270,3 +284,33 @@ def test_parse_atom_parent_link_fallback_variants():
     assert (
         parsed_from_non_self["headers"]["parent_link"] == "https://example.com/related"
     )
+
+
+def test_cli_reads_stdin_and_outputs_json(monkeypatch, capsys):
+    monkeypatch.setattr(
+        "sys.stdin",
+        io.StringIO(
+            """\
+            <rss version="2.0">
+              <channel>
+                <title>CLI Feed</title>
+                <link>https://example.com</link>
+                <description>Demo</description>
+                <item>
+                  <title>Hello</title>
+                  <link>/hello</link>
+                  <description>Body</description>
+                </item>
+              </channel>
+            </rss>
+            """
+        ),
+    )
+
+    exit_code = cli_main([])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    payload = json.loads(captured.out)
+    assert payload["headers"]["title"] == "CLI Feed"
+    assert payload["items"][0]["link"] == "https://example.com/hello"
