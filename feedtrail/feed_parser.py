@@ -13,7 +13,8 @@ from feedtrail.utils.xml_utils import (clean_text, extract_valid_xml,
                                        fix_content, fix_escaped_cdata_markers,
                                        sanitize_xml_entities)
 
-IMG_TAG_RE = re.compile(r'<img[^>]+src=["\']([^"\']+)["\']', re.IGNORECASE)
+# Excluding "<" keeps each scan inside one tag, so failed matches stay linear (no ReDoS).
+IMG_TAG_RE = re.compile(r'<img[^<>]+src=["\']([^"\']+)["\']', re.IGNORECASE)
 
 
 class FeedParser:
@@ -77,7 +78,8 @@ class FeedParser:
             raw = "".join(el.itertext() or []).strip()
             if not raw:
                 continue
-            m = re.search(r"\(([^)]+)\)", raw)
+            # "[^()]" keeps failed matches linear on long runs of "(" (no ReDoS).
+            m = re.search(r"\(([^()]+)\)", raw)
             if m and m.group(1).strip():
                 return html.unescape(m.group(1).strip())
             return html.unescape(raw)

@@ -314,3 +314,21 @@ def test_cli_reads_stdin_and_outputs_json(monkeypatch, capsys):
     payload = json.loads(captured.out)
     assert payload["headers"]["title"] == "CLI Feed"
     assert payload["items"][0]["link"] == "https://example.com/hello"
+
+
+def test_pathological_img_and_author_input_stays_fast():
+    """Regression for quadratic regex backtracking (ReDoS) in image/author extraction."""
+    import time
+
+    payload_img = "&lt;img " * 40000
+    payload_author = "(" * 200000
+    xml = (
+        "<rss><channel><title>t</title><item><title>x</title>"
+        f"<description>{payload_img}</description>"
+        f"<author>{payload_author}</author></item></channel></rss>"
+    )
+    start = time.perf_counter()
+    result = FeedParser().parse(xml)
+    assert time.perf_counter() - start < 2
+    assert result["items"][0]["image"] is None
+    assert result["items"][0]["author"] == payload_author
